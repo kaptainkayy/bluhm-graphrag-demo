@@ -1,0 +1,7 @@
+__pycache__/
+data/source/*.pdf
+data/*.db
+data/*.db.*
+data/*.log
+data/failures.json
+generateddata/

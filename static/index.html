@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102a2a">
+  <link rel="icon" href="data:,">
+  <title>Bluhm Research Explorer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="site-header">
+      <div class="brand-lockup"><span class="brand-mark" aria-hidden="true">⌁</span><div><p class="eyebrow">LOCAL CORPUS / GRAPHRAG DEMO</p><h1>Bluhm Research Explorer</h1></div></div>
+      <div class="header-status"><span class="status-dot" id="status-dot"></span><span id="header-status">Connecting to local corpus</span><span class="model-badges" id="model-badges" aria-label="Model status"></span><button class="text-button" id="refresh-status" type="button">Refresh</button></div>
+    </header>
+
+    <main>
+      <section class="intro-row" aria-labelledby="intro-title">
+        <div><p class="eyebrow accent">A field guide to the evidence</p><h2 id="intro-title">Follow what the literature puts in the same room.</h2><p class="lede">Search source passages, then inspect the entities and papers behind them. Connections show co-mentions in source passages—not proof of interaction.</p></div>
+        <div class="stats-strip" aria-label="Corpus status"><div><strong id="stat-papers">—</strong><span>papers</span></div><div><strong id="stat-pages">—</strong><span>pages</span></div><div><strong id="stat-entities">—</strong><span>entities</span></div><div><strong id="stat-edges">—</strong><span>connections</span></div></div>
+      </section>
+
+      <section class="search-zone" aria-label="Literature search">
+        <form id="search-form"><label for="query">Ask the corpus</label><div class="search-control"><input id="query" name="query" autocomplete="off" placeholder="e.g. What does the literature say about FST1 and fumonisin?" required><button type="submit" id="search-button"><span>Search evidence</span><span aria-hidden="true">↗</span></button></div></form>
+        <div class="example-row"><span>Try a question</span><button type="button" class="example" data-query="What does the literature say about FST1 and fumonisin?">FST1 + fumonisin</button><button type="button" class="example" data-query="What was tested for Sda1?">What was tested for Sda1?</button><button type="button" class="example" data-query="Which papers discuss cercosporin and light?">cercosporin + light</button><label class="ai-toggle"><input id="ai-answer" type="checkbox" checked disabled><span>AI answer</span></label></div>
+        <div class="privacy-note hidden" id="privacy-note">Selected passages are sent to the configured model.</div>
+        <div class="search-state" id="search-state" role="status" aria-live="polite"></div>
+      </section>
+
+      <section class="workspace" aria-label="Evidence workspace">
+        <div class="graph-column panel">
+          <div class="panel-heading"><div><p class="eyebrow">01 / CONTEXT MAP</p><h3>Evidence graph</h3></div><div class="graph-actions"><button class="icon-button" id="fit-graph" type="button" title="Fit graph to view">Fit</button><button class="icon-button" id="reset-graph" type="button" title="Reset graph">Reset</button></div></div>
+          <div class="graph-toolbar"><span id="graph-caption">Search or select an entity to focus the map.</span><span class="toolbar-actions"><button id="focus-neighborhood" type="button" class="text-button hidden">Focus neighborhood</button><button id="clear-selection" type="button" class="text-button hidden">Clear selection</button></span></div>
+          <div class="graph-wrap" id="graph-wrap"><svg id="graph" viewBox="0 0 760 520" role="img" aria-label="Interactive evidence graph"><g id="graph-viewport"><g id="graph-edges"></g><g id="graph-nodes"></g></g></svg><div class="graph-empty" id="graph-empty"><span class="empty-glyph">◌</span><strong>No graph loaded</strong><span>Search the corpus or load the full map to begin.</span></div><div class="graph-loading" id="graph-loading">Loading graph…</div></div>
+          <div class="legend" aria-label="Entity legend"><span><i class="legend-dot gene"></i>Gene</span><span><i class="legend-dot organism"></i>Organism</span><span><i class="legend-dot toxin"></i>Toxin</span><span><i class="legend-dot topic"></i>Topic</span><span class="legend-note">— co-mentioned in source passages</span></div>
+          <div class="graph-controls"><div class="type-filters" role="group" aria-label="Filter graph by entity type"><span>Show</span><button class="type-filter active" data-type="all" type="button">All</button><button class="type-filter" data-type="gene" type="button">Genes</button><button class="type-filter" data-type="organism" type="button">Organisms</button><button class="type-filter" data-type="toxin" type="button">Toxins</button><button class="type-filter" data-type="topic" type="button">Topics</button></div><label class="entity-find"><span class="sr-only">Find entity</span><input id="entity-filter" type="search" placeholder="Find FST1 or cfp…"></label></div>
+          <div id="entity-list" class="entity-list" aria-label="Accessible entity list"></div>
+          <div class="graph-help">Click a node to inspect its neighborhood · drag to pan · scroll to zoom · keyboard: Tab, Enter</div>
+        </div>
+        <aside class="evidence-column panel" aria-live="polite"><div class="panel-heading"><div><p class="eyebrow">02 / SOURCE TRACE</p><h3 id="evidence-title">Evidence</h3></div><span class="mode-badge" id="answer-mode">Source excerpts</span></div><div id="evidence-content" class="evidence-content"><div class="placeholder"><span class="empty-glyph">✦</span><strong>Select a node or connection</strong><span>Every result stays anchored to a paper, passage, page, and PDF.</span></div></div></aside>
+      </section>
+
+      <section class="results-panel panel hidden" id="results-panel"><div class="panel-heading"><div><p class="eyebrow">03 / RETRIEVAL</p><h3>Search findings</h3></div><span id="result-count" class="muted"></span></div><div id="answer-block" class="answer-block hidden"></div><div id="results-list" class="results-list"></div></section>
+
+      <section class="corpus-section panel" id="corpus-section"><button class="corpus-toggle" id="corpus-toggle" type="button" aria-expanded="false" aria-controls="corpus-drawer"><div><p class="eyebrow">CORPUS INDEX</p><h3>Local papers</h3></div><span class="toggle-label">Show papers <span aria-hidden="true">↓</span></span></button><div id="corpus-drawer" class="corpus-drawer" hidden><div id="papers-list" class="papers-list"><span class="muted">Loading paper index…</span></div></div></section>
+    </main>
+    <footer><span>Bluhm Research Explorer</span><span>Evidence first · local and offline</span></footer>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
